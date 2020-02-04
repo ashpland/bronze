@@ -10,6 +10,16 @@ body {
 
 .column {
   width: 20em;
+  padding: 0 1em;
+}
+
+.edit-button {
+  float: right;
+  padding: 0;
+}
+
+.edit-card {
+  padding: 0.5em 0 0.5em 0;
 }
 
 .card {

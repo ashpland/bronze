@@ -32,4 +32,11 @@
            10 {:name "Got a light?"
                :desc "+2 to Craft when making explosives."}
 
+           11 {:name    "Hungry Goat"
+               :desc    "A nice description"
+               :value   +2
+               :checked false
+               :label   "High Concept"
+               :link    "https://fate-srd.com"}
+
            }})
