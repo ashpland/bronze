@@ -9,13 +9,22 @@
               :nodes [2 5 9]}
 
            2 {:name "Aspects"
-              :nodes [3 4]}
+              :nodes [3 4 4.1 4.2 4.3]}
 
            3 {:name "Light fingered sea elf incendiary enthusiast"
               :label "High Concept"}
 
            4 {:name "Can't resist shiny things"
               :label "Trouble"}
+
+           4.1 {:name "Gonna do a crime"}
+           4.2 {:name "Varis is my BFF"}
+           4.3 {:name "Informal economy"
+                :nodes [4.31 4.32 4.33]}
+
+           4.31 {:checked false}
+           4.32 {:checked false}
+           4.33 {:checked false}
 
            5 {:name "Skills"
               :nodes [6 7 8]}

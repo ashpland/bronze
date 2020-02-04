@@ -23,13 +23,19 @@ body {
 }
 
 .card {
-  font-size: 0.85em;
-  padding: 0.5em 0 0.5em 0;
+  font-size: 0.9em;
+  padding: 0.5em 0 0 0;
+  margin-bottom: 1em;
 }
 
 .card h1 {
-  font-size: 1.3em;
+  font-size: 1.1em;
   margin: 0;
+}
+
+.card small {
+  color: #555;
+  font-style: italic;
 }
 
 .card .check {
@@ -40,6 +46,7 @@ body {
   padding-right: 0.5em;
 }
 
-.card .card-list {
-  margin-left: 1em;
+.column > div > .card > .card-list > div > .card > .card-list {
+  border-top: 1px solid black;
+  margin-top: 0.5em;
 }

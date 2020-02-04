@@ -43,7 +43,9 @@
 
             (when label [:small label])
             (when desc [:p desc])
-            (when link [:p link])
+            (when link [:a {:href link
+                            :target "_blank"}
+                        link])
 
             (when (not-empty nodes)
               [:div.card-list

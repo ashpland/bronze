@@ -1,6 +1,7 @@
 (ns bronze.css
   (:require
-   [garden.def :refer [defstyles]]))
+   [garden.def :refer [defstyles]]
+   [garden.selectors :as s]))
 
 (declare screen)
 
@@ -17,18 +18,30 @@
   [:.edit-button {:float "right"
                   :padding "0"}]
 
-[:.edit-card {:padding "0.5em 0 0.5em 0"}]
+  [:.edit-card {:padding "0.5em 0 0.5em 0"}]
 
   [:.card
-   {:font-size "0.85em"
-    :padding "0.5em 0 0.5em 0"}
+   {:font-size "0.9em"
+    :padding "0.5em 0 0 0"
+    :margin-bottom "1em"}
 
-   [:h1 {:font-size "1.3em"
-         :margin "0"}]
+   [:h1 {:font-size "1.1em"
+         :margin "0"
+         }]
+
+   [:small {:color "#555"
+            :font-style "italic"}]
 
    [:.check {:padding-right "0.25em"}]
    [:.value {:padding-right "0.5em"}]
 
-   [:.card-list {:margin-left "1em"}]]
+   ; [:.card-list {:margin-left "1em"}]
+   ]
+
+  [(s/> :.column :div :.card :.card-list :div :.card :.card-list)
+   {:border-top "1px solid black"
+    :margin-top "0.5em"}
+
+   ]
 
   )
