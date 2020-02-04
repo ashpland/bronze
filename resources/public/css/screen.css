@@ -1,0 +1,35 @@
+body {
+  font-size: 18px;
+  font-family: sans-serif;
+}
+
+#main {
+  display: flex;
+  flex-direction: horizontal;
+}
+
+.column {
+  width: 20em;
+}
+
+.card {
+  font-size: 0.85em;
+  padding: 0.5em 0 0.5em 0;
+}
+
+.card h1 {
+  font-size: 1.3em;
+  margin: 0;
+}
+
+.card .check {
+  padding-right: 0.25em;
+}
+
+.card .value {
+  padding-right: 0.5em;
+}
+
+.card .card-list {
+  margin-left: 1em;
+}
