@@ -47,10 +47,13 @@
                             :target "_blank"}
                         link])
 
+
             (when (not-empty nodes)
+              [:<>
+               [:hr]
               [:div.card-list
                (for [id nodes]
-                 [NodeCard id])])
+                 [NodeCard id])]])
             ])
 
          ]))))

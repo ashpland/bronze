@@ -35,11 +35,13 @@
    [:.check {:padding-right "0.25em"}]
    [:.value {:padding-right "0.5em"}]
 
-   ; [:.card-list {:margin-left "1em"}]
+   [:.card-list {:margin-left "0.7em"}]
+   [:hr {:display "none"}]
    ]
 
-  [(s/> :.column :div :.card :.card-list :div :.card :.card-list)
-   {:border-top "1px solid black"
+  [(s/> :.column :div :.card :.card-list :div :.card :hr)
+   {:display "block"
+    :border "1px solid black"
     :margin-top "0.5em"}
 
    ]
