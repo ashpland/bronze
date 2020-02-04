@@ -18,26 +18,35 @@
   [node-id]
   (let [*node (re-frame/subscribe [::subs/node node-id])
         *editing? (reagent/atom false)
-        *collapse? (reagent/atom false)]
+        *collapse? (reagent/atom false)
+        *show-actions? (reagent/atom false)]
     (fn []
       (let [{:keys [name desc value checked label link nodes]} @*node]
         (if @*editing?
-
           [:div.edit-card
-           [:input.edit-button {:type "button" :value "✎"
-                                :on-click  #(swap! *editing? not)}]
+           {:on-mouseOver #(.stopPropagation %)}
+           [:span.action-buttons
+            [:input.edit-button {:type "button" :value "✎"
+                                 :on-click  #(swap! *editing? not)}]]
            (for [field-key [:value :name :label :desc :link :checked]]
-
-             [:div (str field-key) [EditableField node-id field-key]]
-
-
-             )]
+             [:div (str field-key) [EditableField node-id field-key]])]
 
           [:div.card
-           (when (not (or name label desc link (not-empty nodes)))
-             {:class "small-card"})
-           [:input.edit-button {:type "button" :value "✎"
-                                :on-click  #(swap! *editing? not)}]
+           (let [props {:on-mouseOver (fn [e]
+                                        (.stopPropagation e)
+                                        (reset! *show-actions? true))
+                        :on-mouseOut  #(reset! *show-actions? false)}]
+             (if (not (or name label desc link (not-empty nodes)))
+               (assoc props :class "small-card")
+               props))
+
+           (when @*show-actions?
+             [:span.action-buttons
+              [:input.edit-button {:type "button" :value "✎"
+                                   :on-click  #(swap! *editing? not)}]
+              [:input.edit-button {:type "button" :value "⤡" }]
+              [:input.edit-button {:type "button" :value "➚" }]])
+
            [:h1
             (when (some? checked) [:span.check (if (= checked "true") "☑" "☐")])
             (when value [:span.value value])

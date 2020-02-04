@@ -13,8 +13,11 @@ body {
   padding: 0 1em;
 }
 
-.edit-button {
+.action-buttons {
   float: right;
+}
+
+.action-buttons .edit-button {
   padding: 0;
 }
 
@@ -36,8 +39,7 @@ body {
 
 .card {
   font-size: 0.9em;
-  padding: 0.5em 0 0 0;
-  margin-bottom: 1em;
+  padding: 0.5em 0 1em 0;
 }
 
 .card h1 {
@@ -60,10 +62,6 @@ body {
 
 .card .desc {
   margin-top: 0.25em;
-}
-
-.card .name {
-  cursor: pointer;
 }
 
 .card .card-list {
