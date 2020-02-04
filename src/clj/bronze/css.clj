@@ -20,10 +20,17 @@
 
   [:.edit-card {:padding "0.5em 0 0.5em 0"}]
 
+  [:.small-card {:display "inline"}
+   [:h1 {:display "inline"}]]
+
+  [:.collapse {:display "none"}]
+
   [:.card
    {:font-size "0.9em"
     :padding "0.5em 0 0 0"
     :margin-bottom "1em"}
+
+
 
    [:h1 {:font-size "1.1em"
          :margin "0"
@@ -34,12 +41,14 @@
 
    [:.check {:padding-right "0.25em"}]
    [:.value {:padding-right "0.5em"}]
+   [:.desc {:margin-top "0.25em"}]
+   [:.name {:cursor "pointer"}]
 
    [:.card-list {:margin-left "0.7em"}]
    [:hr {:display "none"}]
    ]
 
-  [(s/> :.column :div :.card :.card-list :div :.card :hr)
+  [(s/> :.column :.card :.card-list :.card :hr)
    {:display "block"
     :border "1px solid black"
     :margin-top "0.5em"}
