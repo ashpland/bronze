@@ -24,6 +24,42 @@
          (when value [:span.value value])
          (when name [:span name])]))))
 
+(defn EditCard
+  [node-id *editing? *show-actions?]
+  (let [*node (re-frame/subscribe [::subs/node node-id])]
+    (fn []
+      (let [{:keys [nodes]} @*node]
+        [:div.edit-card
+         {:on-mouseOver #(.stopPropagation %)}
+         [:span.action-buttons
+          [:input {:type "button" :value "✎"
+                   :on-click  #(swap! *editing? not)}]]
+         [:h1 [NodeShort node-id]]
+         (for [field-key [:value :name :label :desc :link :checked]]
+           ^{:key field-key}
+           [:div (str field-key) [EditableField node-id field-key]])
+         [:input {:type "button" :value "Remove node"
+                  :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
+                              (reset! *show-actions? false)
+                              (reset! *editing? false))}]
+
+         [:table
+          [:thead
+           [:tr [:td [:h3 "Children"]]]]
+          [:tbody
+           (for [id nodes]
+             ^{:key id}
+             [:tr
+              [:td [NodeShort id]]
+              [:td.action-buttons [:input {:type "button" :value "X"
+                                           :on-click (fn [] (re-frame/dispatch [::subs/remove-node id]))}]]])]
+          [:tfoot
+           [:tr
+            [:td [:input {:type "button" :value "Add child"
+                          :on-click #(re-frame/dispatch [::subs/add-node node-id]) }]]]]]]))))
+
+
+
 (defn NodeCard
   [node-id]
   (let [*node (re-frame/subscribe [::subs/node node-id])
@@ -33,34 +69,7 @@
     (fn []
       (let [{:keys [name desc value checked label link nodes]} @*node]
         (if @*editing?
-          [:div.edit-card
-           {:on-mouseOver #(.stopPropagation %)}
-           [:span.action-buttons
-            [:input.edit-button {:type "button" :value "✎"
-                                 :on-click  #(swap! *editing? not)}]]
-           [:h1 [NodeShort node-id]]
-           (for [field-key [:value :name :label :desc :link :checked]]
-             ^{:key field-key}
-             [:div (str field-key) [EditableField node-id field-key]])
-           [:input {:type "button" :value "Remove node"
-                    :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
-                                (reset! *show-actions? false)
-                                (reset! *editing? false))}]
-
-           [:table
-            [:thead
-             [:tr [:td [:h3 "Children"]]]]
-            [:tbody
-             (for [id nodes]
-               ^{:key id}
-               [:tr
-                [:td [NodeShort id]]
-                [:td [:input {:type "button" :value "X"
-                              :on-click (fn [] (re-frame/dispatch [::subs/remove-node id]))}]]])]
-            [:tfoot
-             [:tr
-              [:td [:input {:type "button" :value "Add child"
-                    :on-click #(re-frame/dispatch [::subs/add-node node-id]) }]]]]]]
+          [EditCard node-id *editing? *show-actions?]
 
           [:div.card
            (let [props {:on-mouseOver (fn [e]
@@ -73,10 +82,10 @@
 
            (when @*show-actions?
              [:span.action-buttons
-              [:input.edit-button {:type "button" :value "✎"
-                                   :on-click  #(swap! *editing? not)}]
-              [:input.edit-button {:type "button" :value "⤡" }]
-              [:input.edit-button {:type "button" :value "➚" }]])
+              [:input {:type "button" :value "✎"
+                       :on-click  #(swap! *editing? not)}]
+              [:input {:type "button" :value "⤡" }]
+              [:input {:type "button" :value "➚" }]])
 
            [:h1
             (when (some? checked) [:span.check (if (= checked "true") "☑" "☐")])

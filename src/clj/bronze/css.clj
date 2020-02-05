@@ -17,7 +17,7 @@
 
   [:.action-buttons
    {:float "right"}
-   [:.edit-button {:padding "0"}]]
+   [:input {:padding "0"}]]
 
   [:.card :.edit-card
   {:font-size "0.9em"}
@@ -32,7 +32,10 @@
 
   [:.edit-card {:padding "0.5em 0 0.5em 0"}
 
-   [:table {:width "100%"}]
+   [:table {:width "100%"}
+
+
+    ]
 
    ]
 

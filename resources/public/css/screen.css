@@ -17,7 +17,7 @@ body {
   float: right;
 }
 
-.action-buttons .edit-button {
+.action-buttons input {
   padding: 0;
 }
 
