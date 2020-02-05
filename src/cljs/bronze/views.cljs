@@ -46,17 +46,20 @@
   (let [*node (re-frame/subscribe [::subs/node node-id])
         *editing-child (reagent/atom nil)]
     (fn []
-      (let [{:keys [nodes]} @*node]
+      (let [{:keys [nodes name value checked]} @*node
+            short-name (string/join " " (remove nil? [(when checked "☐")
+                                                      value
+                                                      name]))]
         [:div.edit-card
          {:on-mouseOver #(.stopPropagation %)}
          [:span.action-buttons
-          [:input {:type "button" :value "✎"
+          [:input {:type "button" :value "✓"
                    :on-click end-edit-handler}]]
          [:h1 [NodeShort node-id]]
          (for [field-key [:value :name :label :desc :link :checked]]
            ^{:key field-key}
            [:div (str field-key) [EditableField node-id field-key]])
-         [:input {:type "button" :value "Remove node"
+         [:input {:type "button" :value (str "Remove \"" short-name "\"")
                   :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
                               (end-edit-handler))}]
 
@@ -78,7 +81,7 @@
                           :on-click #(reset! *editing-child id)}]]])]
             [:tfoot
              [:tr
-              [:td [:input {:type "button" :value "Add child"
+              [:td [:input {:type "button" :value (str "Add child to \"" short-name "\"")
                             :on-click #(re-frame/dispatch [::subs/add-node node-id]) }]]]]])]))))
 
 
