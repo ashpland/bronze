@@ -1,13 +1,17 @@
 (ns bronze.db)
 
 (def default-db
-  {:head 1
+  {:panes {:root 0
+           0 {:id 0
+              :node-id 1
+              :next-pane nil}}
 
-   :nodes {
+   :nodes {:root 1
+
            1 {:name "Tu-Kirno"
               :desc "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel congue lacus. Maecenas vitae sem non purus ullamcorper scelerisque nec et justo. Mauris convallis, nunc laoreet rhoncus malesuada, metus ligula sodales erat, in fringilla mauris arcu in nisl. Nulla mi orci, tincidunt id leo non, ultricies sagittis est."
               :parent nil
-              :nodes [2 5 9]}
+              :nodes [2 5 9 11]}
 
            2 {:name "Aspects"
               :parent 1
@@ -57,7 +61,7 @@
                :desc "+2 to Craft when making explosives."
                :parent 9}
 
-           11 {:name    "Hungry Goat"
+           11 {:name    "Lil' Yachty"
                :desc    "A nice description"
                :value   +2
                :checked "false"

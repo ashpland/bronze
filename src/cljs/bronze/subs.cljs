@@ -3,9 +3,21 @@
    [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
- ::head
+ ::panes
  (fn [db]
-   (:head db)))
+   (:panes db)))
+
+(re-frame/reg-event-db
+ ::new-pane
+ (fn [db [_ current-pane-id node-id]]
+   (let [next-id (get-in db [:panes current-pane-id :next-pane])
+         new-id (random-uuid)
+         new-pane {:id new-id
+                   :node-id node-id
+                   :next-pane next-id}]
+     (-> db
+         (assoc-in [:panes new-id] new-pane)
+         (assoc-in [:panes current-pane-id :next-pane] new-id)))))
 
 (re-frame/reg-sub
  ::nodes

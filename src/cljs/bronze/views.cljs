@@ -85,7 +85,7 @@
 
 
 (defn NodeCard
-  [node-id]
+    [pane node-id]
   (let [*node (re-frame/subscribe [::subs/node node-id])
         *editing? (reagent/atom false)
         *collapse? (reagent/atom false)
@@ -112,8 +112,9 @@
                [:span.action-buttons
                 [:input {:type "button" :value "✎"
                          :on-click  #(swap! *editing? not)}]
-                [:input {:type "button" :value "⤡" }]
-                [:input {:type "button" :value "➚" }]])
+                [:input {:type "button" :value "⤡"}]
+                [:input {:type "button" :value "➚"
+                         :on-click #(re-frame/dispatch [::subs/new-pane pane node-id])}]])
 
              [:h1
               (when (not-empty nodes)
@@ -137,13 +138,24 @@
                 [:div.card-list
                  (for [id nodes]
                    ^{:key id}
-                   [NodeCard id])]])
+                   [NodeCard pane id])]])
              ]))))))
 
+(defn get-pane-ids
+  [panes {id :id next-id :next-pane}]
+  (let [next-pane (get panes next-id)]
+    (if (nil? next-pane)
+      [id]
+      (flatten (conj [id] (get-pane-ids panes next-pane))))))
+
 (defn main-panel []
-  (let [*head (re-frame/subscribe [::subs/head])]
-    [:div#main
-     [:div.column [NodeCard @*head]]
-     [:div.column [NodeCard 2]]
-     [:div.column [NodeCard 11]]
-     ]))
+  (let [*panes (re-frame/subscribe [::subs/panes])]
+    (fn []
+      (let [panes @*panes
+            pane-ids (get-pane-ids panes (get panes (:root panes)))
+            ordered-panes (->> pane-ids
+                               (map #(get panes %)))]
+        [:div#main
+         (for [{:keys [id node-id]} ordered-panes]
+           ^{:key id}
+           [:div.column [NodeCard id node-id]])]))))
