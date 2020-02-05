@@ -29,7 +29,12 @@
             [:input.edit-button {:type "button" :value "✎"
                                  :on-click  #(swap! *editing? not)}]]
            (for [field-key [:value :name :label :desc :link :checked]]
-             [:div (str field-key) [EditableField node-id field-key]])]
+             [:div (str field-key) [EditableField node-id field-key]])
+           [:input {:type "button" :value "Remove"
+                    :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
+                                (reset! *show-actions? false)
+                                (reset! *editing? false))}]
+           ]
 
           [:div.card
            (let [props {:on-mouseOver (fn [e]

@@ -30,3 +30,11 @@
  ::update-node-key
  (fn [db [_ id field-key new-value]]
    (assoc-in db [:nodes id field-key] new-value)))
+
+(re-frame/reg-event-db
+ ::remove-node
+ (fn [db [_ id]]
+   (let [parent-id (get-in db [:nodes id :parent])]
+     (-> db
+         (update-in [:nodes parent-id :nodes] #(remove #{id} %))
+         (update :nodes #(dissoc % id))))))
