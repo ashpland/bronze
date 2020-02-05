@@ -112,7 +112,6 @@
                [:span.action-buttons
                 [:input {:type "button" :value "✎"
                          :on-click  #(swap! *editing? not)}]
-                [:input {:type "button" :value "⤡"}]
                 [:input {:type "button" :value "➚"
                          :on-click #(re-frame/dispatch [::subs/new-pane pane node-id])}]])
 
@@ -158,4 +157,7 @@
         [:div#main
          (for [{:keys [id node-id]} ordered-panes]
            ^{:key id}
-           [:div.column [NodeCard id node-id]])]))))
+           [:div.column
+            [:input {:type "button" :value "Remove Pane"
+                         :on-click #(re-frame/dispatch [::subs/remove-pane id])}]
+            [NodeCard id node-id]])]))))

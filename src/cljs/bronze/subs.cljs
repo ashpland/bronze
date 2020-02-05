@@ -19,6 +19,33 @@
          (assoc-in [:panes new-id] new-pane)
          (assoc-in [:panes current-pane-id :next-pane] new-id)))))
 
+(re-frame/reg-event-db
+ ::remove-pane
+ (fn [db [_ current-pane-id]]
+   (let [prev-id (->> db :panes vals
+                      (filter #(= current-pane-id (:next-pane %)))
+                      first :id)
+         next-id (get-in db [:panes current-pane-id :next-pane])
+         remove-current (fn [db] (update db :panes #(dissoc % current-pane-id)))
+         set-next (if prev-id
+                    #(assoc-in % [:panes prev-id :next-pane] next-id)
+                    #(assoc-in % [:panes :root] next-id))]
+
+     (if (and (not prev-id)
+              (not next-id))
+       (let [root-node (get-in db [:nodes :root])
+             new-id (random-uuid)
+             new-pane {:id new-id
+                       :node-id root-node
+                       :next-pane nil}]
+         (-> db
+             remove-current
+             (assoc-in [:panes new-id] new-pane)
+             (assoc-in [:panes :root] new-id)))
+       (-> db
+           set-next
+           remove-current)))))
+
 (re-frame/reg-sub
  ::nodes
  (fn [db]
