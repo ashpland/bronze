@@ -116,14 +116,14 @@
                 [:input {:type "button" :value "➚" }]])
 
              [:h1
+              (when (not-empty nodes)
+                {:style {:cursor "pointer"}
+                 :on-click #(swap! *collapse? not)})
+              (when (not-empty nodes)
+                [:span.collapse-arrow (if @*collapse? "▷" "▽")])
               [Checkbox checked]
               (when value [:span.value value])
-              (when name [:span
-                          (when (not-empty nodes)
-                            {:style {:cursor "pointer"}
-                             :on-click #(swap! *collapse? not)})
-                          name])]
-
+              (when name [:span name])]
              (when label [:small label])
              (when desc [:p.desc desc])
              (when link [:a {:href link

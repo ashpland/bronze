@@ -21,6 +21,12 @@ body {
   padding: 0;
 }
 
+.collapse-arrow {
+  padding-right: 0.2em;
+  font-size: 0.5em;
+  vertical-align: middle;
+}
+
 .card, .edit-card {
   font-size: 0.9em;
 }

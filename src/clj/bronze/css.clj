@@ -19,6 +19,10 @@
    {:float "right"}
    [:input {:padding "0"}]]
 
+  [:.collapse-arrow {:padding-right "0.2em"
+                     :font-size "0.5em"
+                     :vertical-align "middle"}]
+
   [:.card :.edit-card
   {:font-size "0.9em"}
 
@@ -34,9 +38,7 @@
 
   [:.small-card {:display "inline"
                  :padding-right "0.5em"}
-   [:.small-value {:padding-right "0.1em"}]
-
-   ]
+   [:.small-value {:padding-right "0.1em"}]]
 
   [:.collapse {:display "none"}]
 
