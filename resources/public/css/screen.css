@@ -48,8 +48,8 @@ body {
   padding-right: 0.5em;
 }
 
-.small-card h1 {
-  display: inline;
+.small-card .small-value {
+  padding-right: 0.1em;
 }
 
 .collapse {

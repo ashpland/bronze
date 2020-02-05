@@ -34,7 +34,9 @@
 
   [:.small-card {:display "inline"
                  :padding-right "0.5em"}
-   [:h1 {:display "inline"}]]
+   [:.small-value {:padding-right "0.1em"}]
+
+   ]
 
   [:.collapse {:display "none"}]
 

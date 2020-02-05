@@ -1,8 +1,9 @@
 (ns bronze.views
   (:require
+   [bronze.subs :as subs]
+   [clojure.string :as string]
    [reagent.core :as reagent]
    [re-frame.core :as re-frame]
-   [bronze.subs :as subs]
    ))
 
 (defn EditableField
@@ -10,17 +11,25 @@
   (let [*value (re-frame/subscribe [::subs/node-key id field-key])]
     (fn []
       [:input {:value @*value
-               :on-change #(re-frame/dispatch [::subs/update-node-key
-                                               id field-key
-                                               (-> % .-target .-value)])}])))
+               :on-change
+               (fn [e]
+                 (let [value (-> e .-target .-value)
+                       new-value (if (string/blank? value)
+                                   nil
+                                   value)]
+                   (re-frame/dispatch [::subs/update-node-key
+                                       id field-key new-value
+                                       ])))}])))
 
 (defn Checkbox
   [checked]
-  (when (or (= "true"  checked)
-            (= "false" checked))
+  (when checked
     [:span.check (case checked
+                   "x"  "☑"
+                   "X"  "☑"
+                   "t"  "☑"
                    "true"  "☑"
-                   "false" "☐")]))
+                   "☐")]))
 
 (defn NodeShort
   [node-id]
@@ -86,52 +95,50 @@
         (if @*editing?
           [EditCard node-id #(reset! *editing? false) *show-actions?]
 
-          [:div.card
-           (let [props {:on-mouseOver (fn [e]
-                                        (.stopPropagation e)
-                                        (reset! *show-actions? true))
-                        :on-mouseOut  #(reset! *show-actions? false)}]
-             (if (not (or name label desc link (not-empty nodes)))
-               (do (reset! *show-actions? false)
-                   (assoc props :class "small-card"))
-               props))
 
-           (when @*show-actions?
-             [:span.action-buttons
-              [:input {:type "button" :value "✎"
-                       :on-click  #(swap! *editing? not)}]
-              [:input {:type "button" :value "⤡" }]
-              [:input {:type "button" :value "➚" }]])
+          (if (not (or name label desc link (not-empty nodes)))
+            [:div.small-card
+             (reset! *show-actions? false)
+             (when value [:span.small-value value])
+             [Checkbox checked]]
 
-           [:h1
-            [Checkbox checked]
-            (when value [:span.value value])
-            (when name [:span
-                        (when (not-empty nodes)
-                          {:style {:cursor "pointer"}
-                           :on-click #(swap! *collapse? not)})
-                        name])]
+            [:div.card
+             {:on-mouseOver (fn [e]
+                              (.stopPropagation e)
+                              (reset! *show-actions? true))
+              :on-mouseOut  #(reset! *show-actions? false)}
 
-           (when label [:small label])
-           (when desc [:p.desc desc])
-           (when link [:a {:href link
-                           :target "_blank"}
-                       link])
+             (when @*show-actions?
+               [:span.action-buttons
+                [:input {:type "button" :value "✎"
+                         :on-click  #(swap! *editing? not)}]
+                [:input {:type "button" :value "⤡" }]
+                [:input {:type "button" :value "➚" }]])
 
+             [:h1
+              [Checkbox checked]
+              (when value [:span.value value])
+              (when name [:span
+                          (when (not-empty nodes)
+                            {:style {:cursor "pointer"}
+                             :on-click #(swap! *collapse? not)})
+                          name])]
 
+             (when label [:small label])
+             (when desc [:p.desc desc])
+             (when link [:a {:href link
+                             :target "_blank"}
+                         link])
 
-
-           (when (and (not @*collapse?)
-                      (not-empty nodes))
-             [:<>
-              [:hr]
-              [:div.card-list
-               (for [id nodes]
-                 ^{:key id}
-                 [NodeCard id])]])
-           ])
-
-        ))))
+             (when (and (not @*collapse?)
+                        (not-empty nodes))
+               [:<>
+                [:hr]
+                [:div.card-list
+                 (for [id nodes]
+                   ^{:key id}
+                   [NodeCard id])]])
+             ]))))))
 
 (defn main-panel []
   (let [*head (re-frame/subscribe [::subs/head])]
