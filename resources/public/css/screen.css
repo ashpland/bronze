@@ -45,6 +45,7 @@ body {
 
 .small-card {
   display: inline;
+  padding-right: 0.5em;
 }
 
 .small-card h1 {

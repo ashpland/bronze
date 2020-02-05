@@ -14,26 +14,35 @@
                                                id field-key
                                                (-> % .-target .-value)])}])))
 
+(defn Checkbox
+  [checked]
+  (when (or (= "true"  checked)
+            (= "false" checked))
+    [:span.check (case checked
+                   "true"  "☑"
+                   "false" "☐")]))
+
 (defn NodeShort
   [node-id]
   (let [*node (re-frame/subscribe [::subs/node node-id])]
     (fn []
       (let [{:keys [name value checked]} @*node]
         [:span
-         (when (some? checked) [:span.check (if (= checked "true") "☑" "☐")])
+         [Checkbox checked]
          (when value [:span.value value])
          (when name [:span name])]))))
 
 (defn EditCard
-  [node-id *editing? *show-actions?]
-  (let [*node (re-frame/subscribe [::subs/node node-id])]
+  [node-id end-edit-handler *show-actions?]
+  (let [*node (re-frame/subscribe [::subs/node node-id])
+        *editing-child (reagent/atom nil)]
     (fn []
       (let [{:keys [nodes]} @*node]
         [:div.edit-card
          {:on-mouseOver #(.stopPropagation %)}
          [:span.action-buttons
           [:input {:type "button" :value "✎"
-                   :on-click  #(swap! *editing? not)}]]
+                   :on-click end-edit-handler}]]
          [:h1 [NodeShort node-id]]
          (for [field-key [:value :name :label :desc :link :checked]]
            ^{:key field-key}
@@ -41,22 +50,28 @@
          [:input {:type "button" :value "Remove node"
                   :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
                               (reset! *show-actions? false)
-                              (reset! *editing? false))}]
+                              (end-edit-handler))}]
 
-         [:table
-          [:thead
-           [:tr [:td [:h3 "Children"]]]]
-          [:tbody
-           (for [id nodes]
-             ^{:key id}
+         (if @*editing-child
+           [EditCard @*editing-child #(reset! *editing-child nil)]
+           [:table
+            [:thead
+             [:tr [:td [:h3 "Children"]]]]
+            [:tbody
+             (for [id nodes]
+               ^{:key id}
+               [:tr
+                [:td [NodeShort id]]
+                [:td.action-buttons
+                 [:input {:type "button" :value "X"
+                          :on-click (fn [] (re-frame/dispatch [::subs/remove-node id]))}]]
+                [:td.action-buttons
+                 [:input {:type "Button" :value "✎"
+                          :on-click #(reset! *editing-child id)}]]])]
+            [:tfoot
              [:tr
-              [:td [NodeShort id]]
-              [:td.action-buttons [:input {:type "button" :value "X"
-                                           :on-click (fn [] (re-frame/dispatch [::subs/remove-node id]))}]]])]
-          [:tfoot
-           [:tr
-            [:td [:input {:type "button" :value "Add child"
-                          :on-click #(re-frame/dispatch [::subs/add-node node-id]) }]]]]]]))))
+              [:td [:input {:type "button" :value "Add child"
+                            :on-click #(re-frame/dispatch [::subs/add-node node-id]) }]]]]])]))))
 
 
 
@@ -69,7 +84,7 @@
     (fn []
       (let [{:keys [name desc value checked label link nodes]} @*node]
         (if @*editing?
-          [EditCard node-id *editing? *show-actions?]
+          [EditCard node-id #(reset! *editing? false) *show-actions?]
 
           [:div.card
            (let [props {:on-mouseOver (fn [e]
@@ -77,7 +92,8 @@
                                         (reset! *show-actions? true))
                         :on-mouseOut  #(reset! *show-actions? false)}]
              (if (not (or name label desc link (not-empty nodes)))
-               (assoc props :class "small-card")
+               (do (reset! *show-actions? false)
+                   (assoc props :class "small-card"))
                props))
 
            (when @*show-actions?
@@ -88,7 +104,7 @@
               [:input {:type "button" :value "➚" }]])
 
            [:h1
-            (when (some? checked) [:span.check (if (= checked "true") "☑" "☐")])
+            [Checkbox checked]
             (when value [:span.value value])
             (when name [:span
                         (when (not-empty nodes)

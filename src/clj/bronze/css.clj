@@ -26,28 +26,20 @@
          :margin "0"}]
 
    [:h3 {:font-size "1em"
-         :margin-bottom "0"}]
-
-   ]
+         :margin-bottom "0"}]]
 
   [:.edit-card {:padding "0.5em 0 0.5em 0"}
 
-   [:table {:width "100%"}
+   [:table {:width "100%"}]]
 
-
-    ]
-
-   ]
-
-  [:.small-card {:display "inline"}
+  [:.small-card {:display "inline"
+                 :padding-right "0.5em"}
    [:h1 {:display "inline"}]]
 
   [:.collapse {:display "none"}]
 
   [:.card
-   {
-    :padding "0.5em 0 1em 0"
-    }
+   {:padding "0.5em 0 1em 0"}
 
 
    [:small {:color "#555"

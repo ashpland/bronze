@@ -29,11 +29,11 @@
                 :parent 2
                 :nodes [4.31 4.32 4.33]}
 
-           4.31 {:checked false
+           4.31 {:checked "false"
                  :parent 4.3}
-           4.32 {:checked false
+           4.32 {:checked "false"
                  :parent 4.3}
-           4.33 {:checked false
+           4.33 {:checked "false"
                  :parent 4.3}
 
            5 {:name "Skills"
@@ -60,7 +60,7 @@
            11 {:name    "Hungry Goat"
                :desc    "A nice description"
                :value   +2
-               :checked false
+               :checked "false"
                :label   "High Concept"
                :link    "https://fate-srd.com"
                :parent  nil}
