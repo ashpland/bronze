@@ -19,7 +19,22 @@
    {:float "right"}
    [:.edit-button {:padding "0"}]]
 
-  [:.edit-card {:padding "0.5em 0 0.5em 0"}]
+  [:.card :.edit-card
+  {:font-size "0.9em"}
+
+   [:h1 {:font-size "1.1em"
+         :margin "0"}]
+
+   [:h3 {:font-size "1em"
+         :margin-bottom "0"}]
+
+   ]
+
+  [:.edit-card {:padding "0.5em 0 0.5em 0"}
+
+   [:table {:width "100%"}]
+
+   ]
 
   [:.small-card {:display "inline"}
    [:h1 {:display "inline"}]]
@@ -27,13 +42,10 @@
   [:.collapse {:display "none"}]
 
   [:.card
-   {:font-size "0.9em"
+   {
     :padding "0.5em 0 1em 0"
     }
 
-   [:h1 {:font-size "1.1em"
-         :margin "0"
-         }]
 
    [:small {:color "#555"
             :font-style "italic"}]

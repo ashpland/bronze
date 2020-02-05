@@ -14,6 +14,16 @@
                                                id field-key
                                                (-> % .-target .-value)])}])))
 
+(defn NodeShort
+  [node-id]
+  (let [*node (re-frame/subscribe [::subs/node node-id])]
+    (fn []
+      (let [{:keys [name value checked]} @*node]
+        [:span
+         (when (some? checked) [:span.check (if (= checked "true") "☑" "☐")])
+         (when value [:span.value value])
+         (when name [:span name])]))))
+
 (defn NodeCard
   [node-id]
   (let [*node (re-frame/subscribe [::subs/node node-id])
@@ -28,13 +38,29 @@
            [:span.action-buttons
             [:input.edit-button {:type "button" :value "✎"
                                  :on-click  #(swap! *editing? not)}]]
+           [:h1 [NodeShort node-id]]
            (for [field-key [:value :name :label :desc :link :checked]]
+             ^{:key field-key}
              [:div (str field-key) [EditableField node-id field-key]])
-           [:input {:type "button" :value "Remove"
+           [:input {:type "button" :value "Remove node"
                     :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
                                 (reset! *show-actions? false)
                                 (reset! *editing? false))}]
-           ]
+
+           [:table
+            [:thead
+             [:tr [:td [:h3 "Children"]]]]
+            [:tbody
+             (for [id nodes]
+               ^{:key id}
+               [:tr
+                [:td [NodeShort id]]
+                [:td [:input {:type "button" :value "X"
+                              :on-click (fn [] (re-frame/dispatch [::subs/remove-node id]))}]]])]
+            [:tfoot
+             [:tr
+              [:td [:input {:type "button" :value "Add child"
+                    :on-click #(re-frame/dispatch [::subs/add-node node-id]) }]]]]]]
 
           [:div.card
            (let [props {:on-mouseOver (fn [e]
@@ -68,12 +94,15 @@
                        link])
 
 
+
+
            (when (and (not @*collapse?)
                       (not-empty nodes))
              [:<>
               [:hr]
               [:div.card-list
                (for [id nodes]
+                 ^{:key id}
                  [NodeCard id])]])
            ])
 
