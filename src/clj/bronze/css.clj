@@ -34,7 +34,8 @@
 
   [:.edit-card {:padding "0.5em 0 0.5em 0"}
 
-   [:table {:width "100%"}]]
+   [:table {:width "100%"}
+    [:input {:padding "0"}]]]
 
   [:.small-card {:display "inline"
                  :padding-right "0.5em"}

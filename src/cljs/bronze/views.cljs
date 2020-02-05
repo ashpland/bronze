@@ -42,7 +42,7 @@
          (when name [:span name])]))))
 
 (defn EditCard
-  [node-id end-edit-handler *show-actions?]
+  [node-id end-edit-handler]
   (let [*node (re-frame/subscribe [::subs/node node-id])
         *editing-child (reagent/atom nil)]
     (fn []
@@ -58,7 +58,6 @@
            [:div (str field-key) [EditableField node-id field-key]])
          [:input {:type "button" :value "Remove node"
                   :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
-                              (reset! *show-actions? false)
                               (end-edit-handler))}]
 
          (if @*editing-child
@@ -71,10 +70,10 @@
                ^{:key id}
                [:tr
                 [:td [NodeShort id]]
-                [:td.action-buttons
+                [:td
                  [:input {:type "button" :value "X"
                           :on-click (fn [] (re-frame/dispatch [::subs/remove-node id]))}]]
-                [:td.action-buttons
+                [:td
                  [:input {:type "Button" :value "✎"
                           :on-click #(reset! *editing-child id)}]]])]
             [:tfoot
@@ -93,8 +92,9 @@
     (fn []
       (let [{:keys [name desc value checked label link nodes]} @*node]
         (if @*editing?
-          [EditCard node-id #(reset! *editing? false) *show-actions?]
-
+          [EditCard node-id (fn []
+                              (reset! *show-actions? false)
+                              (reset! *editing? false))]
 
           (if (not (or name label desc link (not-empty nodes)))
             [:div.small-card
