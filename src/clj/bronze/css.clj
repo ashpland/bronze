@@ -30,7 +30,12 @@
          :margin "0"}]
 
    [:h3 {:font-size "1em"
-         :margin-bottom "0"}]]
+         :margin-bottom "0"}]
+
+   [:.check {:padding-right "0.25em"}]
+   [:.value {:padding-right "0.25em"}]
+
+   ]
 
   [:.edit-card {:padding "0.5em 0 0.5em 0"}
 
@@ -50,12 +55,9 @@
    [:small {:color "#555"
             :font-style "italic"}]
 
-   [:.check {:padding-right "0.25em"}]
-   [:.value {:padding-right "0.5em"}]
    [:.desc {:margin-top "0.25em"}]
 
    [:.card-list {:margin-left "0.7em"}]
-   [:hr {:display "none"}]
    ]
 
   [(s/> :.column :.card :.card-list :.card :hr)

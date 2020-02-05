@@ -41,6 +41,14 @@ body {
   margin-bottom: 0;
 }
 
+.card .check, .edit-card .check {
+  padding-right: 0.25em;
+}
+
+.card .value, .edit-card .value {
+  padding-right: 0.25em;
+}
+
 .edit-card {
   padding: 0.5em 0 0.5em 0;
 }
@@ -75,24 +83,12 @@ body {
   font-style: italic;
 }
 
-.card .check {
-  padding-right: 0.25em;
-}
-
-.card .value {
-  padding-right: 0.5em;
-}
-
 .card .desc {
   margin-top: 0.25em;
 }
 
 .card .card-list {
   margin-left: 0.7em;
-}
-
-.card hr {
-  display: none;
 }
 
 .column > .card > .card-list > .card > hr {

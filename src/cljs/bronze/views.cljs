@@ -21,6 +21,21 @@
                                        id field-key new-value
                                        ])))}])))
 
+(defn EditableTextArea
+  [id field-key]
+  (let [*value (re-frame/subscribe [::subs/node-key id field-key])]
+    (fn []
+      [:textarea {:value @*value
+               :on-change
+               (fn [e]
+                 (let [value (-> e .-target .-value)
+                       new-value (if (string/blank? value)
+                                   nil
+                                   value)]
+                   (re-frame/dispatch [::subs/update-node-key
+                                       id field-key new-value
+                                       ])))}])))
+
 (defn Checkbox
   [checked]
   (when checked
@@ -56,9 +71,10 @@
           [:input {:type "button" :value "✓"
                    :on-click end-edit-handler}]]
          [:h1 [NodeShort node-id]]
-         (for [field-key [:value :name :label :desc :link :checked]]
+         (for [field-key [:checked :value :name :label :link]]
            ^{:key field-key}
            [:div (str field-key) [EditableField node-id field-key]])
+         [:div (str :desc) [EditableTextArea node-id :desc]]
          [:input {:type "button" :value (str "Remove \"" short-name "\"")
                   :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
                               (end-edit-handler))}]
@@ -90,7 +106,7 @@
     [pane node-id]
   (let [*node (re-frame/subscribe [::subs/node node-id])
         *editing? (reagent/atom false)
-        *collapse? (reagent/atom false)
+        *collapse? (reagent/atom true)
         *show-actions? (reagent/atom false)]
     (fn []
       (let [{:keys [name desc value checked label link nodes]} @*node]
@@ -135,12 +151,10 @@
 
              (when (and (not @*collapse?)
                         (not-empty nodes))
-               [:<>
-                [:hr]
-                [:div.card-list
-                 (for [id nodes]
-                   ^{:key id}
-                   [NodeCard pane id])]])
+               [:div.card-list
+                (for [id nodes]
+                  ^{:key id}
+                  [NodeCard pane id])])
              ]))))))
 
 (defn get-pane-ids

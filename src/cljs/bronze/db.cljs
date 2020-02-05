@@ -3,15 +3,21 @@
 (def default-db
   {:panes {:root 0
            0 {:id 0
-              :node-id 1
+              :node-id 0
               :next-pane nil}}
 
-   :nodes {:root 1
+   :nodes {:root 0
+
+           0 {:name "The Boy Who Fell Out Of The Sky"
+              :nodes [0.1]}
+
+           0.1 {:name "Characters"
+                :nodes [1]}
 
            1 {:name "Tu-Kirno"
               :desc "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel congue lacus. Maecenas vitae sem non purus ullamcorper scelerisque nec et justo. Mauris convallis, nunc laoreet rhoncus malesuada, metus ligula sodales erat, in fringilla mauris arcu in nisl. Nulla mi orci, tincidunt id leo non, ultricies sagittis est."
               :parent nil
-              :nodes [2 5 9 11]}
+              :nodes [2 5 9 10.5]}
 
            2 {:name "Aspects"
               :parent 1
@@ -60,6 +66,9 @@
            10 {:name "Got a light?"
                :desc "+2 to Craft when making explosives."
                :parent 9}
+
+           10.5 {:name "Extras"
+                 :nodes [11]}
 
            11 {:name    "Lil' Yachty"
                :desc    "A nice description"
