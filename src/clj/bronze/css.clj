@@ -9,14 +9,19 @@
             :menu-bar "#eee"})
 
 (defstyles screen
+
   [:body {:font-size "18px"
           :font-family "sans-serif"
-          :margin 0}]
+          :margin 0 }]
 
   [:#menu-bar
-   {:background-color (:menu-bar color)
-    :margin-bottom "0.5em"
-    :box-shadow "0px 1px 3px 0px rgba(0,0,0,0.75)"
+   {:position "fixed"
+    :left 0
+    :right 0
+
+    :height "2em"
+    :background-color (:menu-bar color)
+    :box-shadow "0 0.1em 0.3em 0 rgba(0,0,0,0.75)"
     :display "flex"
     ; :align-items "flex-start"
     :align-items "center"
@@ -33,10 +38,19 @@
             :letter-spacing "0.1em"}]
    ]
 
-  [:#main {:display "flex" }]
+  [:#main {:display "flex"
+           :height "100vh"}]
 
-  [:.column {:width "20em"
-             :padding "0 1em"}]
+  [:.column {:min-width "17em"
+             :max-width "25em"
+             :margin-top "2em"
+             :width "17em"
+
+             :padding "1em 1em 0"
+             :overflow "scroll"}
+   ]
+[:.single-column {:min-width "inherit"
+                     :width "95vw"}]
 
   [:.action-buttons
    {:float "right"}

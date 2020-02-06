@@ -106,7 +106,7 @@
 
 
 (defn NodeCard
-    [pane node-id]
+  [pane node-id]
   (let [*node (re-frame/subscribe [::subs/node node-id])
         *editing? (reagent/atom false)
         *collapse? (reagent/atom false)
@@ -196,13 +196,17 @@
       (let [panes @*all-panes
             pane-ids (get-pane-ids panes (get panes @*root-pane))
             ordered-panes (->> pane-ids
-                               (map #(get panes %)))]
+                               (map #(get panes %)))
+            column-type (if (= 1 (count ordered-panes))
+                          :div.column.single-column
+                          :div.column)]
         [:<>
          [MenuBar]
          [:div#main
           (for [{:keys [id node-id]} ordered-panes]
             ^{:key id}
-            [:div.column
+            [column-type
              [:input {:type "button" :value "Remove Column"
                       :on-click #(re-frame/dispatch [::subs/remove-pane id])}]
-             [NodeCard id node-id]])]]))))
+             [NodeCard id node-id]])
+          ]]))))
