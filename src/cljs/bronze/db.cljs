@@ -1,14 +1,13 @@
 (ns bronze.db)
 
 (def default-db
-  {:panes {:root 0
-           0 {:id 0
+  {:root-pane 0
+   :panes {0 {:id 0
               :node-id 0
               :next-pane nil}}
 
-   :nodes {:root 0
-
-           0 {:name "The Boy Who Fell Out Of The Sky"
+   :root-node 0
+   :nodes {0 {:name "The Boy Who Fell Out Of The Sky"
               :nodes [0.1]}
 
            0.1 {:name "Characters"

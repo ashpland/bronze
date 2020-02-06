@@ -7,6 +7,11 @@
  (fn [db]
    (:panes db)))
 
+(re-frame/reg-sub
+ ::root-pane
+ (fn [db]
+   (:root-pane db)))
+
 (re-frame/reg-event-db
  ::new-pane
  (fn [db [_ current-pane-id node-id]]
@@ -29,19 +34,18 @@
          remove-current (fn [db] (update db :panes #(dissoc % current-pane-id)))
          set-next (if prev-id
                     #(assoc-in % [:panes prev-id :next-pane] next-id)
-                    #(assoc-in % [:panes :root] next-id))]
+                    #(assoc % :root-pane next-id))]
 
      (if (and (not prev-id)
               (not next-id))
-       (let [root-node (get-in db [:nodes :root])
-             new-id (random-uuid)
+       (let [new-id (random-uuid)
              new-pane {:id new-id
-                       :node-id root-node
+                       :node-id (:root-node db)
                        :next-pane nil}]
          (-> db
              remove-current
              (assoc-in [:panes new-id] new-pane)
-             (assoc-in [:panes :root] new-id)))
+             (assoc :root-pane new-id)))
        (-> db
            set-next
            remove-current)))))
@@ -50,6 +54,11 @@
  ::nodes
  (fn [db]
    (:nodes db)))
+
+(re-frame/reg-sub
+ ::root-node
+ (fn [db]
+   (:root-node db)))
 
 (re-frame/reg-sub
  ::node
@@ -79,18 +88,35 @@
                              flatten
                              (remove nil?))))))
 
+(defn reset-nodes-and-panes
+  "When the root node gets deleted, also clear the panes, and create a new blank item."
+  [db]
+  (let [new-node-id (random-uuid)
+        new-pane-id (random-uuid)]
+    (-> db
+        (assoc :nodes {new-node-id {:name "Blank Card"
+                                    :parent nil}})
+        (assoc :root-node new-node-id)
+
+        (assoc :panes {new-pane-id {:id new-pane-id
+                                    :node-id new-node-id
+                                    :next-pane nil}})
+        (assoc :root-pane new-pane-id))))
+
 (re-frame/reg-event-db
  ::remove-node
  (fn [db [_ node-id]]
    (let [node (get-in db [:nodes node-id])
          parent-id (:parent node)
          child-ids (set (get-children (:nodes db) node-id))]
-     (-> db
-         (update-in [:nodes parent-id :nodes] #(remove #{node-id} %))
-         (update :nodes (fn [nodes]
-                          (reduce (fn [nodes id] (dissoc nodes id))
-                                  nodes
-                                  (conj child-ids node-id))))))))
+     (if (= node-id (:root-node db))
+       (reset-nodes-and-panes db)
+       (-> db
+           (update-in [:nodes parent-id :nodes] #(remove #{node-id} %))
+           (update :nodes (fn [nodes]
+                            (reduce (fn [nodes id] (dissoc nodes id))
+                                    nodes
+                                    (conj child-ids node-id)))))))))
 
 (re-frame/reg-event-db
  ::add-node
@@ -100,5 +126,5 @@
          (update-in [:nodes parent-id :nodes] #(if %
                                                  (conj % node-id)
                                                  [node-id]))
-         (update :nodes #(assoc % node-id {:name "New item"
+         (update :nodes #(assoc % node-id {:name "Blank Card"
                                            :parent parent-id}))))))

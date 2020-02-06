@@ -106,7 +106,7 @@
     [pane node-id]
   (let [*node (re-frame/subscribe [::subs/node node-id])
         *editing? (reagent/atom false)
-        *collapse? (reagent/atom true)
+        *collapse? (reagent/atom false)
         *show-actions? (reagent/atom false)]
     (fn []
       (let [{:keys [name desc value checked label link nodes]} @*node]
@@ -165,16 +165,17 @@
       (flatten (conj [id] (get-pane-ids panes next-pane))))))
 
 (defn main-panel []
-  (let [*panes (re-frame/subscribe [::subs/panes])]
+  (let [*all-panes (re-frame/subscribe [::subs/panes])
+        *root-pane (re-frame/subscribe [::subs/root-pane])]
     (fn []
-      (let [panes @*panes
-            pane-ids (get-pane-ids panes (get panes (:root panes)))
+      (let [panes @*all-panes
+            pane-ids (get-pane-ids panes (get panes @*root-pane))
             ordered-panes (->> pane-ids
                                (map #(get panes %)))]
         [:div#main
          (for [{:keys [id node-id]} ordered-panes]
            ^{:key id}
            [:div.column
-            [:input {:type "button" :value "Remove Pane"
+            [:input {:type "button" :value "Remove Column"
                          :on-click #(re-frame/dispatch [::subs/remove-pane id])}]
             [NodeCard id node-id]])]))))
