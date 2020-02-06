@@ -5,12 +5,35 @@
 
 (declare screen)
 
+(def color {:main "#CD7F32"
+            :menu-bar "#eee"})
+
 (defstyles screen
   [:body {:font-size "18px"
-          :font-family "sans-serif"}]
+          :font-family "sans-serif"
+          :margin 0}]
 
-  [:#main {:display "flex"
-           :flex-direction "horizontal" }]
+  [:#menu-bar
+   {:background-color (:menu-bar color)
+    :margin-bottom "0.5em"
+    :box-shadow "0px 1px 3px 0px rgba(0,0,0,0.75)"
+    :display "flex"
+    ; :align-items "flex-start"
+    :align-items "center"
+    }
+
+   [:.logo {:display "block"
+            :padding "0.2em 0.2em 0.1em 0.2em"
+            :margin "0.3em"
+            :border-radius "5px"
+            :color (:menu-bar color)
+            :background-color (:main color)
+            :font-weight "bold"
+            :font-size "1.1em"
+            :letter-spacing "0.1em"}]
+   ]
+
+  [:#main {:display "flex" }]
 
   [:.column {:width "20em"
              :padding "0 1em"}]

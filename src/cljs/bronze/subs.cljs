@@ -1,6 +1,14 @@
 (ns bronze.subs
   (:require
+   [clojure.edn :as edn]
    [re-frame.core :as re-frame]))
+
+(re-frame/reg-sub ::db identity)
+
+(re-frame/reg-event-db
+ ::reload-db
+ (fn [_ [_ new-db]]
+   (edn/read-string new-db)))
 
 (re-frame/reg-sub
  ::panes

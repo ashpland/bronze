@@ -157,6 +157,21 @@
                   [NodeCard pane id])])
              ]))))))
 
+(defn MenuBar
+  []
+  (let [*db (re-frame/subscribe [::subs/db])]
+  [:div#menu-bar
+         [:div.logo "bronze"]
+         [:div.menu-buttons
+          [:input {:type "button" :value "Export"
+                   :on-click #(.writeText (.-clipboard js/navigator) @*db)}]
+
+          [:input {:type "button" :value "Import"
+                   :on-click (fn []
+                               (let [input (js/prompt "Put the export here")]
+                                 (re-frame/dispatch [::subs/reload-db input])
+                                 ))}]]]))
+
 (defn get-pane-ids
   [panes {id :id next-id :next-pane}]
   (let [next-pane (get panes next-id)]
@@ -172,10 +187,12 @@
             pane-ids (get-pane-ids panes (get panes @*root-pane))
             ordered-panes (->> pane-ids
                                (map #(get panes %)))]
-        [:div#main
-         (for [{:keys [id node-id]} ordered-panes]
-           ^{:key id}
-           [:div.column
-            [:input {:type "button" :value "Remove Column"
-                         :on-click #(re-frame/dispatch [::subs/remove-pane id])}]
-            [NodeCard id node-id]])]))))
+        [:<>
+         [MenuBar]
+         [:div#main
+          (for [{:keys [id node-id]} ordered-panes]
+            ^{:key id}
+            [:div.column
+             [:input {:type "button" :value "Remove Column"
+                      :on-click #(re-frame/dispatch [::subs/remove-pane id])}]
+             [NodeCard id node-id]])]]))))
