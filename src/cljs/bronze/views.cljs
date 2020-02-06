@@ -159,18 +159,17 @@
 
 (defn MenuBar
   []
-  (let [*db (re-frame/subscribe [::subs/db])]
   [:div#menu-bar
          [:div.logo "bronze"]
          [:div.menu-buttons
           [:input {:type "button" :value "Export"
-                   :on-click #(.writeText (.-clipboard js/navigator) @*db)}]
+             :on-click #(js/alert @(re-frame/subscribe [::subs/db]))}]
 
           [:input {:type "button" :value "Import"
                    :on-click (fn []
                                (let [input (js/prompt "Put the export here")]
                                  (re-frame/dispatch [::subs/reload-db input])
-                                 ))}]]]))
+                           ))}]]])
 
 (defn get-pane-ids
   [panes {id :id next-id :next-pane}]
