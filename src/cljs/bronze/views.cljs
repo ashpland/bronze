@@ -71,10 +71,13 @@
           [:input {:type "button" :value "✓"
                    :on-click end-edit-handler}]]
          [:h1 [NodeShort node-id]]
-         (for [field-key [:checked :value :name :label :link]]
-           ^{:key field-key}
-           [:div (str field-key) [EditableField node-id field-key]])
-         [:div (str :desc) [EditableTextArea node-id :desc]]
+         [:table
+          [:tbody
+           (for [field-key [:checked :value :name :label :link :desc]]
+             ^{:key field-key}
+             [:tr
+              [:td (str field-key)]
+              [:td [EditableField node-id field-key]]])]]
          [:input {:type "button" :value (str "Remove \"" short-name "\"")
                   :on-click (fn [] (re-frame/dispatch [::subs/remove-node node-id])
                               (end-edit-handler))}]
@@ -160,15 +163,15 @@
 (defn MenuBar
   []
   [:div#menu-bar
-         [:div.logo "bronze"]
-         [:div.menu-buttons
-          [:input {:type "button" :value "Export"
+   [:div.logo "bronze"]
+   [:div.menu-buttons
+    [:input {:type "button" :value "Export"
              :on-click #(js/alert @(re-frame/subscribe [::subs/db]))}]
 
-          [:input {:type "button" :value "Import"
-                   :on-click (fn []
-                               (let [input (js/prompt "Put the export here")]
-                                 (re-frame/dispatch [::subs/reload-db input])
+    [:input {:type "button" :value "Import"
+             :on-click (fn []
+                         (let [input (js/prompt "Put the export here")]
+                           (re-frame/dispatch [::subs/reload-db input])
                            ))}]]])
 
 (defn get-pane-ids
