@@ -171,8 +171,16 @@
     [:input {:type "button" :value "Import"
              :on-click (fn []
                          (let [input (js/prompt "Put the export here")]
-                           (re-frame/dispatch [::subs/reload-db input])
-                           ))}]]])
+                           (re-frame/dispatch [::subs/set-db input])
+                           ))}]
+    [:input {:type "button" :value "Write"
+             :on-click #(js/alert "write to local storage")}]
+    [:input {:type "button" :value "Read"
+             :on-click #(js/alert "read from local storage")}]
+    [:input {:type "button" :value "Default"
+             :on-click #(re-frame/dispatch [::subs/restore-default-db])}]
+
+    ]])
 
 (defn get-pane-ids
   [panes {id :id next-id :next-pane}]
