@@ -174,11 +174,11 @@
                            (re-frame/dispatch [::subs/set-db input])
                            ))}]
     [:input {:type "button" :value "Write"
-             :on-click #(re-frame/dispatch [::subs/write-db-from-local-storage])}]
+             :on-click #(re-frame/dispatch [::subs/write-db-to-local-storage])}]
     [:input {:type "button" :value "Read"
              :on-click #(re-frame/dispatch [::subs/read-db-from-local-storage])}]
-    [:input {:type "button" :value "Default"
-             :on-click #(re-frame/dispatch [::subs/restore-default-db])}]
+    [:input {:type "button" :value "Sample"
+             :on-click #(re-frame/dispatch [::subs/restore-sample-db])}]
 
     ]])
 

@@ -15,9 +15,9 @@
        db))))
 
 (re-frame/reg-event-db
- ::restore-default-db
+ ::restore-sample-db
  (fn []
-   bdb/default-db))
+   bdb/sample-db))
 
 (re-frame/reg-sub
  ::panes
