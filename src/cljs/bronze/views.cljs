@@ -174,9 +174,9 @@
                            (re-frame/dispatch [::subs/set-db input])
                            ))}]
     [:input {:type "button" :value "Write"
-             :on-click #(js/alert "write to local storage")}]
+             :on-click #(re-frame/dispatch [::subs/write-db-from-local-storage])}]
     [:input {:type "button" :value "Read"
-             :on-click #(js/alert "read from local storage")}]
+             :on-click #(re-frame/dispatch [::subs/read-db-from-local-storage])}]
     [:input {:type "button" :value "Default"
              :on-click #(re-frame/dispatch [::subs/restore-default-db])}]
 

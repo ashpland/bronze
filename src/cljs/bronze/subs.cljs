@@ -145,3 +145,47 @@
                                                  [node-id]))
          (update :nodes #(assoc % node-id {:name "Blank Card"
                                            :parent parent-id}))))))
+
+(re-frame/reg-event-fx
+ ::write-db-to-local-storage
+ (fn [{:keys [db]} _]
+   {::write-to-local-storage {:storage-key  :bronze
+                              :data-to-write db}}))
+
+(re-frame/reg-event-fx
+ ::read-db-from-local-storage
+ [(re-frame/inject-cofx ::read-from-local-storage :bronze)]
+ (fn [{new-db ::local-storage}]
+   {:dispatch [::set-db new-db]}))
+
+(re-frame/reg-fx
+ ::write-to-local-storage
+ (fn [{:keys [storage-key data-to-write]}]
+   (let [local-storage (.-localStorage js/window)
+         js-key        (name storage-key)
+         edn-value     (str data-to-write)]
+     (.setItem local-storage js-key edn-value))))
+
+(re-frame/reg-cofx
+ ::read-from-local-storage
+ (fn [cofx storage-key]
+   (let [local-storage (.-localStorage js/window)
+         js-key        (name storage-key)
+         value         (.getItem local-storage js-key)]
+     (assoc cofx ::local-storage value))))
+
+
+
+(comment
+
+ ;; js write to local storage
+ (re-frame/reg-fx
+  ::js-write-to-local-storage
+  (fn [{:keys [storage-key data-to-write]}]
+    (let [local-storage (.-localStorage js/window)
+          js-key        (name storage-key)
+          json-data     (->> data-to-write
+                             clj->js
+                             (.stringify js/JSON))]
+      (.setItem local-storage js-key json-data))))
+ )
