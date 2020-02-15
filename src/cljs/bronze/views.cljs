@@ -160,26 +160,27 @@
                   [NodeCard pane id])])
              ]))))))
 
-(defn MenuBar
-  []
-  [:div#menu-bar
-   [:div.logo "bronze"]
-   [:div.menu-buttons
-    [:input {:type "button" :value "Export"
-             :on-click #(js/alert @(re-frame/subscribe [::subs/db]))}]
+(defn Button
+  [value on-click config]
+  [:input (merge {:type "button" :value value :on-click on-click
+                  :class "text-xs m-1 px-1 rounded shadow text-gray-900 cursor-pointer border border-gray-700 bg-gray-400 hover:bg-gray-500"}
+                 config)])
 
-    [:input {:type "button" :value "Import"
-             :on-click (fn []
-                         (let [input (js/prompt "Put the export here")]
-                           (re-frame/dispatch [::subs/set-db input])
-                           ))}]
-    [:input {:type "button" :value "Write"
-             :on-click #(re-frame/dispatch [::subs/write-db-to-local-storage])}]
-    [:input {:type "button" :value "Read"
-             :on-click #(re-frame/dispatch [::subs/read-db-from-local-storage])}]
-    [:input {:type "button" :value "Sample"
-             :on-click #(re-frame/dispatch [::subs/restore-sample-db])}]
+(defn Logo []
+  [:div {:class "text-gray-300 bg-yellow-700 w-24 text-center rounded-lg font-bold text-2xl mr-1 border-b-2 border-yellow-800"}
+   "bronze"])
 
+(defn MenuBar []
+  [:div {:class "w-full fixed flex p-2 bg-gray-400 shadow-md"}
+   [Logo]
+   [:div {:class "h-full self-center ml-2"}
+    [Button "Export" #(js/alert @(re-frame/subscribe [::subs/db]))]
+    [Button "Import" (fn []
+                             (let [input (js/prompt "Put the export here")]
+                               (re-frame/dispatch [::subs/set-db input])))]
+    [Button "Write"  #(re-frame/dispatch [::subs/write-db-to-local-storage])]
+    [Button "Read"   #(re-frame/dispatch [::subs/read-db-from-local-storage])]
+    [Button "Sample" #(re-frame/dispatch [::subs/restore-sample-db])]
     ]])
 
 (defn get-pane-ids
@@ -200,13 +201,13 @@
             column-type (if (= 1 (count ordered-panes))
                           :div.column.single-column
                           :div.column)]
-        [:<>
+        [:div {:class "text-gray-900"}
          [MenuBar]
-         [:div#main
+         [:div
           (for [{:keys [id node-id]} ordered-panes]
             ^{:key id}
-            [column-type
-             [:input {:type "button" :value "Remove Column"
-                      :on-click #(re-frame/dispatch [::subs/remove-pane id])}]
+            [:div {:class "pt-16"}
+             [Button "Remove Column" #(re-frame/dispatch [::subs/remove-pane id])]
+
              [NodeCard id node-id]])
           ]]))))

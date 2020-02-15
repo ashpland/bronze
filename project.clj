@@ -7,11 +7,10 @@
                  [thheller/shadow-cljs "2.8.83"]
                  [reagent "0.9.1"]
                  [re-frame "0.11.0"]
-                 [garden "1.3.9"]
+
                  [ns-tracker "0.4.0"]]
 
-  :plugins [[lein-garden "0.3.0"]
-            [lein-shell "0.5.0"]]
+  :plugins [[lein-shell "0.5.0"]]
 
   :min-lein-version "2.5.3"
 
@@ -40,12 +39,11 @@
                             ["shell" "open" "target/build-report.html"]]
             "karma"        ["with-profile" "prod" "do"
                             ["run" "-m" "shadow.cljs.devtools.cli" "compile" "karma-test"]
-                            ["shell" "karma" "start" "--single-run" "--reporters" "junit,dots"]]}
+                            ["shell" "karma" "start" "--single-run" "--reporters" "junit,dots"]]
+            "tailwind"     ["shell" "npx" "tailwindcss" "build" "src/css/main.css" "-o" "resources/public/css/screen.css"]}
 
   :profiles
   {:dev
    {:dependencies [[binaryage/devtools "0.9.11"]]}
 
-   :prod { }}
-
-  :prep-tasks [["garden" "once"]])
+   :prod { }})
