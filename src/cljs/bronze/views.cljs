@@ -6,6 +6,12 @@
    [re-frame.core :as re-frame]
    ))
 
+(defn tw
+  [tw-keys]
+  (->> tw-keys
+       (map name)
+       (string/join " ")))
+
 (defn EditableField
   [id field-key]
   (let [*value (re-frame/subscribe [::subs/node-key id field-key])]
@@ -162,32 +168,31 @@
 
 (defn Button
   [value on-click config]
-  (let [style "m-1 px-1
-              text-xs text-gray-900
-              bg-gray-400 rounded shadow
-              border border-gray-700
-              cursor-pointer hover:bg-gray-500"]
+  (let [style [:m-1 :px-1
+               :text-xs :text-gray-900
+               :bg-gray-400 :rounded :shadow
+               :border :border-gray-700
+               :cursor-pointer :hover:bg-gray-500]]
     [:input (merge {:type "button"
                     :value value
                     :on-click on-click
-                    :class style }
+                    :class (tw style)}
                    config)]))
 
 (defn Logo []
-  (let [style "w-24 mr-1
-              text-2xl text-center font-bold text-gray-300
-              bg-yellow-700 rounded-lg
-              border-b-2 border-yellow-800"]
-    [:div {:class style } "bronze"]))
+  (let [style [:w-24 :mr-1
+               :text-2xl :text-center :font-bold :text-gray-300
+               :bg-yellow-700 :rounded-lg
+               :border-b-2 :border-yellow-800]]
+    [:div {:class (tw style)} "bronze"]))
 
 (defn MenuBar []
-  [:div {:class "fixed flex w-full p-2 bg-gray-400 shadow-md"}
+  [:div {:class (tw [:fixed :flex :w-full :p-2 :bg-gray-400 :shadow-md])}
    [Logo]
-   [:div {:class "h-full self-center ml-2"}
+   [:div {:class (tw [:h-full :self-center :ml-2])}
     [Button "Export" #(js/alert @(re-frame/subscribe [::subs/db]))]
-    [Button "Import" (fn []
-                             (let [input (js/prompt "Put the export here")]
-                               (re-frame/dispatch [::subs/set-db input])))]
+    [Button "Import" #(let [input (js/prompt "Put the export here")]
+                        (re-frame/dispatch [::subs/set-db input]))]
     [Button "Write"  #(re-frame/dispatch [::subs/write-db-to-local-storage])]
     [Button "Read"   #(re-frame/dispatch [::subs/read-db-from-local-storage])]
     [Button "Sample" #(re-frame/dispatch [::subs/restore-sample-db])]
@@ -211,12 +216,12 @@
             column-type (if (= 1 (count ordered-panes))
                           :div.column.single-column
                           :div.column)]
-        [:div {:class "text-gray-900"}
+        [:div {:class (tw [:text-gray-900])}
          [MenuBar]
          [:div
           (for [{:keys [id node-id]} ordered-panes]
             ^{:key id}
-            [:div {:class "pt-16"}
+            [:div {:class (tw [:pt-16])}
              [Button "Remove Column" #(re-frame/dispatch [::subs/remove-pane id])]
 
              [NodeCard id node-id]])
