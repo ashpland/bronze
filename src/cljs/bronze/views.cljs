@@ -162,16 +162,26 @@
 
 (defn Button
   [value on-click config]
-  [:input (merge {:type "button" :value value :on-click on-click
-                  :class "text-xs m-1 px-1 rounded shadow text-gray-900 cursor-pointer border border-gray-700 bg-gray-400 hover:bg-gray-500"}
-                 config)])
+  (let [style "m-1 px-1
+              text-xs text-gray-900
+              bg-gray-400 rounded shadow
+              border border-gray-700
+              cursor-pointer hover:bg-gray-500"]
+    [:input (merge {:type "button"
+                    :value value
+                    :on-click on-click
+                    :class style }
+                   config)]))
 
 (defn Logo []
-  [:div {:class "text-gray-300 bg-yellow-700 w-24 text-center rounded-lg font-bold text-2xl mr-1 border-b-2 border-yellow-800"}
-   "bronze"])
+  (let [style "w-24 mr-1
+              text-2xl text-center font-bold text-gray-300
+              bg-yellow-700 rounded-lg
+              border-b-2 border-yellow-800"]
+    [:div {:class style } "bronze"]))
 
 (defn MenuBar []
-  [:div {:class "w-full fixed flex p-2 bg-gray-400 shadow-md"}
+  [:div {:class "fixed flex w-full p-2 bg-gray-400 shadow-md"}
    [Logo]
    [:div {:class "h-full self-center ml-2"}
     [Button "Export" #(js/alert @(re-frame/subscribe [::subs/db]))]
